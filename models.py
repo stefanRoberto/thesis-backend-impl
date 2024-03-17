@@ -1,6 +1,6 @@
 import datetime as dt
 
-from sqlalchemy import Integer, Boolean, String, Text, Column, DateTime, ForeignKey, Table
+from sqlalchemy import Integer, Boolean, String, Text, Column, DateTime, ForeignKey, Table, UUID
 from sqlalchemy.orm import relationship
 from database import Base
 
@@ -15,7 +15,7 @@ playlist_track_association_table = Table(
 class Artist(Base):
     __tablename__ = 'artists'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     name = Column(String(18))
     country = Column(String)
     birth_date = Column(DateTime, default=dt.datetime.utcnow())
@@ -29,7 +29,7 @@ class Artist(Base):
 class Album(Base):
     __tablename__ = 'albums'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     title = Column(String(25))
     release_date = Column(DateTime, default=dt.datetime.utcnow())
     artist_id = Column(Integer, ForeignKey('artists.id'))
@@ -41,7 +41,7 @@ class Album(Base):
 class Track(Base):
     __tablename__ = 'tracks'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     title = Column(String(25))
     album_id = Column(Integer, ForeignKey('albums.id'))
     duration = Column(Integer)
@@ -55,7 +55,7 @@ class Track(Base):
 class User(Base):
     __tablename__ = 'users'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     name = Column(String(18))
     username = Column(String(25), unique=True, index=True)
     email = Column(String(320), unique=True, index=True)
@@ -68,7 +68,7 @@ class User(Base):
 class Playlist(Base):
     __tablename__ = 'playlists'
 
-    id = Column(Integer, primary_key=True, index=True)
+    id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     title = Column(String(25))
     user_id = Column(Integer, ForeignKey('users.id'))
     created_at = Column(DateTime, default=dt.datetime.utcnow())
