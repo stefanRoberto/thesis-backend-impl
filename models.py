@@ -1,3 +1,5 @@
+import datetime as dt
+
 from sqlalchemy import Integer, Boolean, String, Text, Column, DateTime, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from database import Base
@@ -16,6 +18,7 @@ class Artist(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(18))
     country = Column(String)
+    birth_date = Column(DateTime, default=dt.datetime.utcnow())
     bio = Column(String(1500))
     genre = Column(String)
     listeners = Column(Integer, default=0)
@@ -28,7 +31,7 @@ class Album(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(25))
-    release_date = Column(DateTime)
+    release_date = Column(DateTime, default=dt.datetime.utcnow())
     artist_id = Column(Integer, ForeignKey('artists.id'))
 
     artist = relationship('Artist', back_populates='albums')
@@ -43,12 +46,12 @@ class Track(Base):
     album_id = Column(Integer, ForeignKey('albums.id'))
     duration = Column(Integer)
     plays = Column(Integer, default=0)
+    release_date = Column(DateTime, default=dt.datetime.utcnow())
 
     album = relationship('Album', back_populates='tracks')
     playlists = relationship('Playlist', secondary=playlist_track_association_table, back_populates='tracks')
 
 
-# TODO: Finish User model (add playlists)
 class User(Base):
     __tablename__ = 'users'
 
@@ -57,6 +60,7 @@ class User(Base):
     username = Column(String(25), unique=True, index=True)
     email = Column(String(320), unique=True, index=True)
     password = Column(String)
+    birth_date = Column(DateTime, default=dt.datetime.utcnow())
 
     playlists = relationship('Playlist', back_populates='user')
 
@@ -67,6 +71,7 @@ class Playlist(Base):
     id = Column(Integer, primary_key=True, index=True)
     title = Column(String(25))
     user_id = Column(Integer, ForeignKey('users.id'))
+    created_at = Column(DateTime, default=dt.datetime.utcnow())
 
     user = relationship('User', back_populates='playlists')
     tracks = relationship('Track', secondary=playlist_track_association_table, back_populates='playlists')
