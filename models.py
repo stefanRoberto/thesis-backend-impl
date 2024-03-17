@@ -1,9 +1,14 @@
-from sqlalchemy import Integer, Boolean, String, Text, Column, DateTime, ForeignKey
+from sqlalchemy import Integer, Boolean, String, Text, Column, DateTime, ForeignKey, Table
 from sqlalchemy.orm import relationship
 from database import Base
 
+playlist_track_association_table = Table(
+    'playlist_track_association_table',
+    Base.metadata,
+    Column('playlist_id', Integer, ForeignKey('playlists.id')),
+    Column('track_id', Integer, ForeignKey('tracks.id'))
+)
 
-# TODO: Add database models
 
 class Artist(Base):
     __tablename__ = 'artists'
@@ -17,6 +22,7 @@ class Artist(Base):
 
     albums = relationship('Album', back_populates='artist')
 
+
 class Album(Base):
     __tablename__ = 'albums'
 
@@ -28,6 +34,7 @@ class Album(Base):
     artist = relationship('Artist', back_populates='albums')
     tracks = relationship('Track', back_populates='album')
 
+
 class Track(Base):
     __tablename__ = 'tracks'
 
@@ -38,6 +45,8 @@ class Track(Base):
     plays = Column(Integer, default=0)
 
     album = relationship('Album', back_populates='tracks')
+    playlists = relationship('Playlist', secondary=playlist_track_association_table, back_populates='tracks')
+
 
 # TODO: Finish User model (add playlists)
 class User(Base):
@@ -48,3 +57,16 @@ class User(Base):
     username = Column(String(25), unique=True, index=True)
     email = Column(String(320), unique=True, index=True)
     password = Column(String)
+
+    playlists = relationship('Playlist', back_populates='user')
+
+
+class Playlist(Base):
+    __tablename__ = 'playlists'
+
+    id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(25))
+    user_id = Column(Integer, ForeignKey('users.id'))
+
+    user = relationship('User', back_populates='playlists')
+    tracks = relationship('Track', secondary=playlist_track_association_table, back_populates='playlists')
