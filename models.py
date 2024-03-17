@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from database import Base
 
 playlist_track_association_table = Table(
-    'playlist_track_association_table',
+    'playlist_track_association',
     Base.metadata,
     Column('playlist_id', Integer, ForeignKey('playlists.id')),
     Column('track_id', Integer, ForeignKey('tracks.id'))
