@@ -1,7 +1,9 @@
 from fastapi import FastAPI
-import models
-from database import engine, SessionLocal
+import database
+from routes import router
 
 app = FastAPI()
 
-# TODO: Add API routes
+database.create_database()
+
+app.include_router(router=router, prefix='/api')
