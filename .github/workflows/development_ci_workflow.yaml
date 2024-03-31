@@ -1,9 +1,6 @@
 name: Backend CI Workflow
 
 on:
-  push:
-    branches:
-      - development
   pull_request:
     branches:
       - development
@@ -12,7 +9,6 @@ on:
 jobs:
   development_ci_job:
     runs-on: ubuntu-latest
-    environment: development
 
     services:
       mysql:
