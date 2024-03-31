@@ -15,9 +15,9 @@ jobs:
         image: mysql:8.0
         env:
           MYSQL_RANDOM_ROOT_PASSWORD: "yes"
-          MYSQL_USER: ${{ env.DB_USERNAME }}
+          MYSQL_USER: ${{ vars.DB_USERNAME }}
           MYSQL_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MYSQL_DATABASE: ${{ env.DB_NAME }}
+          MYSQL_DATABASE: ${{ vars.DB_NAME }}
         ports:
           - 3306:3306
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
@@ -40,9 +40,9 @@ jobs:
       - name: Create .env file
         run: |
           touch .env
-          echo "DB_USERNAME=${{ env.DB_USERNAME }}" >> .env
+          echo "DB_USERNAME=${{ vars.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
-          echo "DB_NAME=${{ env.DB_NAME }}" >> .env
+          echo "DB_NAME=${{ vars.DB_NAME }}" >> .env
       - name: Wait for MySQL to initialize
         run: |
           for i in {1..10}; do
