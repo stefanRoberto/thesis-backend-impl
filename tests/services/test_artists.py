@@ -3,9 +3,7 @@ import datetime
 import pytest
 from unittest.mock import MagicMock, ANY
 
-import models
-import schemas
-import services
+from app import services, models, schemas
 
 
 @pytest.fixture

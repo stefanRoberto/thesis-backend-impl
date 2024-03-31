@@ -1,8 +1,9 @@
-from settings import database
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker, declarative_base
 
-DEFAULT_HOST = 'localhost'
+from app.settings import database
+
+DEFAULT_HOST = '127.0.0.1'
 DEFAULT_PORT = 3306
 
 DB_URL = (f'mysql+mysqlconnector://{database["USERNAME"]}:{database["PASSWORD"]}'

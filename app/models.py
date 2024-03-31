@@ -1,7 +1,9 @@
+import datetime as dt
+
 from sqlalchemy import Integer, Date, String, Column, ForeignKey, Table
 from sqlalchemy.orm import relationship
-from database import Base
-import datetime as dt
+
+from .database import Base
 
 playlist_track_association_table = Table(
     'playlist_track_association',
