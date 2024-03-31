@@ -59,4 +59,4 @@ jobs:
           pytest ./tests/services/ -W ignore::DeprecationWarning
       - name: Run Integration Tests with pytest
         run: |
-          pytest ./tests/routes/ -W ignore::DeprecationWarning
+          pytest ./tests/routers/ -W ignore::DeprecationWarning

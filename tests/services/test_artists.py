@@ -3,7 +3,8 @@ import datetime
 import pytest
 from unittest.mock import MagicMock, ANY
 
-from app import services, models, schemas
+from app import models, schemas
+from app.services import artists
 
 
 @pytest.fixture
@@ -55,9 +56,9 @@ def query_mock(db_artist):
 
 
 def test_create_artist(session, artist_create_schema, jsonable_encoder_mock):
-    services.jsonable_encoder = jsonable_encoder_mock
+    artists.jsonable_encoder = jsonable_encoder_mock
 
-    created_artist = services.create_artist(artist_create_schema, session)
+    created_artist = artists.create_artist(artist_create_schema, session)
 
     session.add.assert_called_once_with(ANY)
     assert isinstance(session.add.call_args.args[0], models.Artist)
@@ -67,7 +68,7 @@ def test_create_artist(session, artist_create_schema, jsonable_encoder_mock):
     session.refresh.assert_called_once_with(ANY)
     assert isinstance(session.refresh.call_args.args[0], models.Artist)
 
-    services.jsonable_encoder.assert_called_once_with(ANY)
+    artists.jsonable_encoder.assert_called_once_with(ANY)
 
     assert isinstance(created_artist, schemas.Artist)
     assert created_artist.id == 1
@@ -82,7 +83,7 @@ def test_create_artist(session, artist_create_schema, jsonable_encoder_mock):
 def test_find_artist(session, db_artist, query_mock):
     session.query.return_value = query_mock
 
-    found_artist = services.find_artist(1, session)
+    found_artist = artists.find_artist(1, session)
 
     session.query().filter().first.assert_called_once()
 
@@ -91,13 +92,13 @@ def test_find_artist(session, db_artist, query_mock):
 
 
 def test_read_artist(session, db_artist, find_artist_mock, jsonable_encoder_mock):
-    services.find_artist = find_artist_mock
-    services.jsonable_encoder = jsonable_encoder_mock
+    artists.find_artist = find_artist_mock
+    artists.jsonable_encoder = jsonable_encoder_mock
 
-    read_artist = services.read_artist(1, session)
+    read_artist = artists.read_artist(1, session)
 
-    services.find_artist.assert_called_once_with(1, session)
-    services.jsonable_encoder.assert_called_once_with(db_artist)
+    artists.find_artist.assert_called_once_with(1, session)
+    artists.jsonable_encoder.assert_called_once_with(db_artist)
 
     assert isinstance(read_artist, schemas.Artist)
     assert read_artist.id == 1
@@ -110,19 +111,19 @@ def test_read_artist(session, db_artist, find_artist_mock, jsonable_encoder_mock
 
 
 def test_update_artist(session, db_artist, find_artist_mock, jsonable_encoder_mock_updated, artist_update_schema):
-    services.find_artist = find_artist_mock
+    artists.find_artist = find_artist_mock
     session.commit.return_value = None
     session.refresh.return_value = None
-    services.jsonable_encoder = jsonable_encoder_mock_updated
+    artists.jsonable_encoder = jsonable_encoder_mock_updated
 
-    updated_artist = services.update_artist(1,
+    updated_artist = artists.update_artist(1,
                                             artist_update_schema,
                                             session)
 
-    services.find_artist.assert_called_once_with(1, session)
+    artists.find_artist.assert_called_once_with(1, session)
     session.commit.assert_called_once()
     session.refresh.assert_called_once_with(db_artist)
-    services.jsonable_encoder.assert_called_once_with(db_artist)
+    artists.jsonable_encoder.assert_called_once_with(db_artist)
 
     assert isinstance(updated_artist, schemas.Artist)
     assert updated_artist.id == 1
@@ -135,16 +136,16 @@ def test_update_artist(session, db_artist, find_artist_mock, jsonable_encoder_mo
 
 
 def test_delete_artist(session, db_artist, find_artist_mock, jsonable_encoder_mock):
-    services.find_artist = find_artist_mock
+    artists.find_artist = find_artist_mock
     session.commit.return_value = None
-    services.jsonable_encoder = jsonable_encoder_mock
+    artists.jsonable_encoder = jsonable_encoder_mock
 
-    deleted_artist = services.delete_artist(1, session)
+    deleted_artist = artists.delete_artist(1, session)
 
-    services.find_artist.assert_called_once_with(1, session)
+    artists.find_artist.assert_called_once_with(1, session)
     session.delete.assert_called_once_with(db_artist)
     session.commit.assert_called_once()
-    services.jsonable_encoder.assert_called_once_with(db_artist)
+    artists.jsonable_encoder.assert_called_once_with(db_artist)
 
     assert isinstance(deleted_artist, schemas.Artist)
     assert deleted_artist.id == 1
