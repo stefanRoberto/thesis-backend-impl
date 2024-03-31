@@ -1,7 +1,7 @@
 import datetime as dt
 from typing import Optional, Generic, TypeVar
 
-from pydantic import BaseModel, Field, EmailStr, ConfigDict
+from pydantic import BaseModel, Field, EmailStr
 
 
 class ArtistBase(BaseModel):

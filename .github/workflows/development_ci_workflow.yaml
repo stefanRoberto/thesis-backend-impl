@@ -10,7 +10,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  development_ci_job:
     runs-on: ubuntu-latest
     environment: development
 
@@ -43,9 +43,17 @@ jobs:
           flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
       - name: Create .env file
         run: |
+          touch .env
           echo "DB_USERNAME=${{ env.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DB_NAME=${{ env.DB_NAME }}" >> .env
+      - name: Wait for MySQL to initialize
+        run: |
+          for i in {1..10}; do
+            nc -z 127.0.0.1 3306 && echo "MySQL is accepting connections!" && break
+            echo "Waiting for MySQL to accept connections..."
+            sleep 5
+          done
       - name: Run Unit Tests with pytest
         run: |
           pytest ./tests/services/ -W ignore::DeprecationWarning
