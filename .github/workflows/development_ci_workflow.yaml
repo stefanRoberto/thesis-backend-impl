@@ -28,6 +28,7 @@ jobs:
         uses: actions/setup-python@v3
         with:
           python-version: "3.11"
+          cache: "pip"
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -52,7 +53,7 @@ jobs:
           done
       - name: Run Unit Tests with pytest
         run: |
-          pytest ./tests/services/ -W ignore::DeprecationWarning
+          pytest ./tests/services/ -W ignore::DeprecationWarning -vv
       - name: Run Integration Tests with pytest
         run: |
-          pytest ./tests/routers/ -W ignore::DeprecationWarning
+          pytest ./tests/routers/ -W ignore::DeprecationWarning -vv
