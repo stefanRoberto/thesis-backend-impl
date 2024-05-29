@@ -117,8 +117,8 @@ def test_update_artist(session, db_artist, find_artist_mock, jsonable_encoder_mo
     artists.jsonable_encoder = jsonable_encoder_mock_updated
 
     updated_artist = artists.update_artist(1,
-                                            artist_update_schema,
-                                            session)
+                                           artist_update_schema,
+                                           session)
 
     artists.find_artist.assert_called_once_with(1, session)
     session.commit.assert_called_once()
