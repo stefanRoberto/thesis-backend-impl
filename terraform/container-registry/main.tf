@@ -3,7 +3,7 @@ terraform {
 
   backend "s3" {
     bucket         = "thesis-api-terraform-state"
-    key            = "tf-infra-deployment/terraform.tfstate"
+    key            = "tf-infra-container-registry/terraform.tfstate"
     region         = "eu-central-1"
     dynamodb_table = "thesis-api-terraform-locks"
     encrypt        = true
@@ -13,16 +13,6 @@ terraform {
     aws = {
       source  = "hashicorp/aws"
       version = ">= 5.40"
-    }
-
-    kubernetes = {
-      source  = "hashicorp/kubernetes"
-      version = "2.29.0"
-    }
-
-    helm = {
-      source  = "hashicorp/helm"
-      version = "2.13.1"
     }
   }
 }

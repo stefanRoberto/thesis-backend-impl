@@ -1,3 +1,5 @@
+data "aws_availability_zones" "available" {}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 5.0"
@@ -6,17 +8,17 @@ module "vpc" {
   cidr = local.vpc_cidr
 
   azs             = local.vpc_azs
-  private_subnets = local.vpc_private_subnets
-  public_subnets  = local.vpc_public_subnets
-  intra_subnets   = local.vpc_intra_subnets
+  private_subnets = [for k, v in local.vpc_azs : cidrsubnet(local.vpc_cidr, 4, k)]
+  public_subnets  = [for k, v in local.vpc_azs : cidrsubnet(local.vpc_cidr, 8, k + 48)]
 
   enable_nat_gateway = true
-
-  private_subnet_tags = {
-    "kubernetes.io/role/internal-elb" = 1
-  }
+  single_nat_gateway = true
 
   public_subnet_tags = {
     "kubernetes.io/role/elb" = 1
+  }
+
+  private_subnet_tags = {
+    "kubernetes.io/role/internal-elb" = 1
   }
 }
