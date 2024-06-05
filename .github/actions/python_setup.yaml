@@ -1,0 +1,23 @@
+name: 'Setup Python and Install Dependencies'
+description: 'This is a composite action that will handle setting up and installing python dependencies.'
+inputs:
+  extra-dependencies:
+    description: 'Additional dependencies to install (optional)'
+    required: false
+    default: ''
+runs:
+  using: 'composite'
+  steps:
+    - name: Setup Python 3.11
+      uses: actions/setup-python@v3
+      with:
+        python-version: "3.11"
+        cache: "pip"
+    - name: Install dependencies
+      shell: bash
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        if [ ! -z "${{ inputs.extra-dependencies }}" ]; then
+                  pip install ${{ inputs.extra-dependencies }}
+        fi

@@ -1,5 +1,4 @@
-name: Backend CI Workflow
-
+name: Backend CI workflow
 on:
   pull_request:
     branches:
@@ -7,9 +6,24 @@ on:
   workflow_dispatch:
 
 jobs:
-  development_ci_job:
+  lint:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
 
+      - name: Setup python 3.11 and install dependencies
+        uses: ./.github/actions/python_setup
+        with:
+          extra-dependencies: flake8
+
+      - name: Lint with flake8
+        run: |
+          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
+          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+
+  test:
+    runs-on: ubuntu-latest
     services:
       mysql:
         image: mysql:8.0
@@ -23,27 +37,21 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
-      - uses: actions/checkout@v3
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v3
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup python 3.11 and install dependencies
+        uses: ./.github/actions/python_setup
         with:
-          python-version: "3.11"
-          cache: "pip"
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install flake8 pytest pytest-cov
-          pip install -r requirements.txt
-      - name: Lint with flake8
-        run: |
-          flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
-          flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
+          extra-dependencies: pytest pytest-cov
+
       - name: Create .env file
         run: |
           touch .env
           echo "DB_USERNAME=${{ vars.DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DB_PASSWORD }}" >> .env
           echo "DB_NAME=${{ vars.DB_NAME }}" >> .env
+
       - name: Wait for MySQL to initialize
         run: |
           for i in {1..10}; do
@@ -51,11 +59,13 @@ jobs:
             echo "Waiting for MySQL to accept connections..."
             sleep 5
           done
-      - name: Run Unit Tests with pytest and get coverage rate
+
+      - name: Run unit tests with pytest and get coverage rate
         run: |
           pytest ./tests/services/ --cov=./app/services --cov-fail-under=100 --cov-report=term-missing \
           -W ignore::DeprecationWarning -vv
-      - name: Run Integration Tests with pytest and get coverage rate
+
+      - name: Run integration tests with pytest and get coverage rate
         run: |
           pytest ./tests/routers/ --cov=./app/routers --cov-fail-under=100 --cov-report=term-missing \
           -W ignore::DeprecationWarning -vv
