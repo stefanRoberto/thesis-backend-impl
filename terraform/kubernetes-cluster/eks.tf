@@ -3,21 +3,21 @@ module "eks" {
   version      = "~> 20.8"
   cluster_name = local.eks_cluster_name
 
-  cluster_version                          = "1.29"
+  cluster_version                          = "1.30"
   cluster_endpoint_public_access           = true
   enable_cluster_creator_admin_permissions = true
 
   cluster_addons = {
     coredns = {
-      most_recent = true
+      addon_version = "v1.11.1-eksbuild.9"
     }
 
     kube-proxy = {
-      most_recent = true
+      addon_version = "v1.30.0-eksbuild.3"
     }
 
     vpc-cni = {
-      most_recent = true
+      addon_version = "v1.18.1-eksbuild.3"
 
       configuration_values = jsonencode({
         enableNetworkPolicy : "true",
@@ -25,7 +25,7 @@ module "eks" {
     }
 
     aws-ebs-csi-driver = {
-      most_recent = true
+      addon_version = "v1.31.0-eksbuild.1"
     }
   }
 

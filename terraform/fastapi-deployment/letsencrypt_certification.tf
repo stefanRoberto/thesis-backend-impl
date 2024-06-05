@@ -12,9 +12,9 @@ resource "kubernetes_manifest" "issuer_le_http_thesis_api" {
 
     spec = {
       acme = {
-        email = local.acme_email
-        #         server = "https://acme-staging-v02.api.letsencrypt.org/directory"
-        server = "https://acme-v02.api.letsencrypt.org/directory"
+        email  = local.acme_email
+        server = "https://acme-staging-v02.api.letsencrypt.org/directory"
+#         server = "https://acme-v02.api.letsencrypt.org/directory"
 
         privateKeySecretRef = {
           name = "thesis-api-issuer-account-key"
@@ -34,13 +34,15 @@ resource "kubernetes_manifest" "issuer_le_http_thesis_api" {
   }
 }
 
-
 resource "kubernetes_ingress_v1" "traefik_thesis_api" {
   metadata {
     name      = "fastapi-ingress"
     namespace = local.kubernetes_namespace
     annotations = {
-      "cert-manager.io/issuer" = kubernetes_manifest.issuer_le_http_thesis_api.manifest.metadata.name
+      "kubernetes.io/ingress.class"                      = "traefik"
+      "traefik.ingress.kubernetes.io/ssl-redirect"       = "true"
+      "traefik.ingress.kubernetes.io/redirect-permanent" = "true"
+      "cert-manager.io/issuer"                           = kubernetes_manifest.issuer_le_http_thesis_api.manifest.metadata.name
     }
   }
 

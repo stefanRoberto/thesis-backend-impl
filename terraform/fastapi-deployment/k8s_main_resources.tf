@@ -4,7 +4,7 @@ data "aws_ecr_repository" "thesis_api" {
 
 data "aws_ecr_image" "fastapi_latest" {
   repository_name = local.ecr_repository_name
-  image_tag       = "latest"
+  image_tag       = var.IMAGE_TAG
 }
 
 resource "kubernetes_secret" "mysql_credentials" {
@@ -100,6 +100,8 @@ resource "kubernetes_deployment" "fastapi" {
 
   timeouts {
     create = "2m"
+    update = "2m"
+    delete = "2m"
   }
 }
 
