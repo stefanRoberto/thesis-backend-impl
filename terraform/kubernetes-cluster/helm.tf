@@ -21,6 +21,16 @@ resource "helm_release" "mysql" {
   }
 
   set {
+    name  = "primary.persistence.enabled"
+    value = "true"
+  }
+
+  set {
+    name  = "primary.persistence.storageClass"
+    value = "gp2"
+  }
+
+  set {
     name  = "primary.persistence.size"
     value = "10Gi"
   }

@@ -1,7 +1,6 @@
 variable "DB_USERNAME" {
   description = "MySQL authentication username"
   type        = string
-  sensitive   = true
 }
 
 variable "DB_PASSWORD" {
@@ -13,5 +12,9 @@ variable "DB_PASSWORD" {
 variable "DB_NAME" {
   description = "MySQL database name"
   type        = string
-  sensitive   = true
+}
+
+variable "IMAGE_TAG" {
+  description = "FastAPI Docker image tag"
+  type        = string
 }

@@ -3,7 +3,7 @@ terraform {
 
   backend "s3" {
     bucket         = "thesis-api-terraform-state"
-    key            = "tf-infra-deployment/terraform.tfstate"
+    key            = "tf-infra-kubernetes-cluster/terraform.tfstate"
     region         = "eu-central-1"
     dynamodb_table = "thesis-api-terraform-locks"
     encrypt        = true

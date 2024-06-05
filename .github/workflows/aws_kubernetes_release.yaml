@@ -1,0 +1,68 @@
+name: AWS EKS Release Workflow
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  build-image-and-push-to-ecr:
+    runs-on: ubuntu-latest
+    environment: Production
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials and setup Terraform
+      uses: ./.github/actions/aws_terraform_setup
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+      with:
+        mask-password: 'true'
+
+    - name: Check if ECR repository exists
+      working-directory: terraform/container-registry
+      run: |
+        terraform init
+        terraform apply -auto-approve
+        echo ECR_REPOSITORY_NAME=$(terraform output -raw ecr_repository_name) >> $GITHUB_ENV
+
+    - name: Build, tag, and push docker image to Amazon ECR
+      env:
+        REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        REPOSITORY: ${{ env.ECR_REPOSITORY_NAME }}
+        IMAGE_TAG: "prod-${{ github.sha }}"
+      run: |
+        docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+        docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+        echo ECR_IMAGE_URI=$REGISTRY/$REPOSITORY:$IMAGE_TAG >> $GITHUB_ENV
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build-image-and-push-to-ecr
+    environment: Production
+    env:
+      TF_VAR_DB_USERNAME: ${{ vars.DB_USERNAME }}
+      TF_VAR_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      TF_VAR_DB_NAME: ${{ vars.DB_NAME }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    - name: Configure AWS credentials and setup Terraform
+      uses: ./.github/actions/aws_terraform_setup
+
+    - name: Check if EKS cluster exists
+      working-directory: terraform/kubernetes-cluster
+      run: |
+        terraform init
+        terraform apply -auto-approve
+
+    - name: Deploy new version to Amazon EKS cluster
+      env:
+        TF_VAR_IMAGE_URI: ${{ needs.build-image-and-push-to-ecr.outputs.ECR_IMAGE_URI }}
+      working-directory: terraform/fastapi-kubernetes-cluster
+      run: |
+        terraform init
+        terraform apply -auto-approve
