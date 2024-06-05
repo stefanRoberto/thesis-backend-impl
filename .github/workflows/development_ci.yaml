@@ -32,7 +32,7 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install flake8
+          pip install flake8 pytest pytest-cov
           pip install -r requirements.txt
       - name: Lint with flake8
         run: |
@@ -51,9 +51,11 @@ jobs:
             echo "Waiting for MySQL to accept connections..."
             sleep 5
           done
-      - name: Run Unit Tests with pytest
+      - name: Run Unit Tests with pytest and get coverage rate
         run: |
-          pytest ./tests/services/ -W ignore::DeprecationWarning -vv
-      - name: Run Integration Tests with pytest
+          pytest ./tests/services/ --cov=./app/services --cov-fail-under=100 --cov-report=term-missing \
+          -W ignore::DeprecationWarning -vv
+      - name: Run Integration Tests with pytest and get coverage rate
         run: |
-          pytest ./tests/routers/ -W ignore::DeprecationWarning -vv
+          pytest ./tests/routers/ --cov=./app/routers --cov-fail-under=100 --cov-report=term-missing \
+          -W ignore::DeprecationWarning -vv
