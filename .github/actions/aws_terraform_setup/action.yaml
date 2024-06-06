@@ -1,14 +1,24 @@
 name: 'Configure AWS credentials and setup Terraform'
 description: 'This is a composite action that configures AWS credentials and sets up Terraform.'
+inputs:
+    aws-access-key-id:
+        description: 'AWS Access Key ID'
+        required: true
+    aws-secret-access-key:
+        description: 'AWS Secret Access Key'
+        required: true
+    aws-region:
+        description: 'AWS Region'
+        required: true
 runs:
   using: 'composite'
   steps:
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v4
       with:
-        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-        aws-region: ${{ vars.AWS_REGION }}
+        aws-access-key-id: ${{ inputs.aws-access-key-id }}
+        aws-secret-access-key: ${{ inputs.aws-secret-access-key }}
+        aws-region: ${{ inputs.aws-region }}
 
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
