@@ -70,7 +70,7 @@ jobs:
     - name: Deploy new version to Amazon EKS cluster
       env:
         TF_VAR_IMAGE_URI: ${{ needs.build-image-and-push-to-ecr.outputs.ECR_IMAGE_URI }}
-      working-directory: terraform/kubernetes-cluster
+      working-directory: terraform/fastapi-deployment
       run: |
         terraform init
         terraform apply -auto-approve
