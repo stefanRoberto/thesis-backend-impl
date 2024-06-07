@@ -71,7 +71,7 @@ jobs:
 
     - name: Deploy new version to Amazon EKS cluster
       env:
-        TF_VAR_IMAGE_TAG: ${{ needs.build-image-and-push-to-ecr.outputs.ECR_IMAGE_TAG }}
+        TF_VAR_IMAGE_TAG: ${{ needs.build-image-and-push-to-ecr.outputs.ecr-image-tag }}
       working-directory: terraform/fastapi-deployment
       run: |
         terraform init
