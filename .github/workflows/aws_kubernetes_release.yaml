@@ -47,7 +47,7 @@ jobs:
 
   deploy:
     runs-on: ubuntu-latest
-    needs: build-image-and-push-to-ecr
+    needs: push-image-to-ecr
     environment: Production
     env:
       TF_VAR_DB_USERNAME: ${{ vars.DB_USERNAME }}
@@ -72,7 +72,7 @@ jobs:
 
     - name: Deploy new version to Amazon EKS cluster
       env:
-        TF_VAR_IMAGE_TAG: ${{ needs.build-image-and-push-to-ecr.outputs.ecr-image-tag }}
+        TF_VAR_IMAGE_TAG: ${{ needs.push-image-to-ecr.outputs.ecr-image-tag }}
       working-directory: terraform/fastapi-deployment
       run: |
         terraform init
