@@ -5,11 +5,11 @@ on:
     branches:
       - main
 jobs:
-  build-image-and-push-to-ecr:
+  push-image-to-ecr:
     runs-on: ubuntu-latest
     environment: Production
     outputs:
-      ecr-image-tag: ${{ steps.build-image-and-push-to-ecr.outputs.ECR_IMAGE_TAG }}
+      ecr-image-tag: ${{ steps.push-image.outputs.ECR_IMAGE_TAG }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -35,6 +35,7 @@ jobs:
         echo ECR_REPOSITORY_NAME=$(terraform output -raw ecr_repository_name) >> $GITHUB_ENV
 
     - name: Build, tag, and push docker image to Amazon ECR
+      id: push-image
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: ${{ env.ECR_REPOSITORY_NAME }}
