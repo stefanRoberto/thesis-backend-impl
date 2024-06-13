@@ -1,7 +1,7 @@
 from fastapi.encoders import jsonable_encoder
 from sqlalchemy.orm import Session
 
-from .. import models, schemas
+from app import models, schemas
 
 
 def create_artist(artist: schemas.ArtistCreate, session: Session):
