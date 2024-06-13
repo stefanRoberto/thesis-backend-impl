@@ -2,8 +2,8 @@ from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
 from sqlalchemy.orm.exc import UnmappedInstanceError
 
-from .. import database, schemas
-from ..services import artists
+from app import database, schemas
+from app.services import artists
 
 router = APIRouter(prefix='/artists', tags=['artists'])
 
