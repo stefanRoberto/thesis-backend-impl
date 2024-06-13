@@ -32,3 +32,10 @@ def artist_create_schema():
 def artist_update_schema():
     return schemas.ArtistUpdate(bio="Updated test bio",
                                 genre="Updated test genre")
+
+
+@pytest.fixture
+def album_create_schema():
+    return schemas.AlbumCreate(title="Test Album",
+                               release_date=datetime.date.today(),
+                               artist_id=1)
