@@ -18,3 +18,8 @@ variable "IMAGE_TAG" {
   description = "FastAPI Docker image tag"
   type        = string
 }
+
+variable "ACME_SERVER" {
+    description = "ACME server for issuing TLS certificates"
+    type        = string
+}

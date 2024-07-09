@@ -73,6 +73,7 @@ jobs:
     - name: Deploy new version to Amazon EKS cluster
       env:
         TF_VAR_IMAGE_TAG: ${{ needs.push-image-to-ecr.outputs.ecr-image-tag }}
+        TF_VAR_ACME_SERVER: ${{ vars.ACME_SERVER }}
       working-directory: terraform/fastapi-deployment
       run: |
         terraform init
