@@ -20,6 +20,6 @@ variable "IMAGE_TAG" {
 }
 
 variable "ACME_SERVER" {
-    description = "ACME server for issuing TLS certificates"
-    type        = string
+  description = "ACME server for issuing TLS certificates"
+  type        = string
 }
