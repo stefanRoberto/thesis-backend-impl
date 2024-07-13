@@ -33,8 +33,7 @@ jobs:
       - name: Use ECR Terraform cache
         uses: ./.github/actions/terraform_lock_caching
         with:
-          terraform-working-directory: terraform/container-registry
-          terraform-cache-key: container-registry
+          tf-directory: terraform/container-registry
 
       - name: Check if ECR repository exists
         working-directory: terraform/container-registry
@@ -91,35 +90,22 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Debug EKS Cache Before Init
-        run: |
-          ls -al $HOME/.terraform.d/plugin-cache-kubernetes-cluster
-
       - name: Use EKS Terraform cache
         uses: ./.github/actions/terraform_lock_caching
         with:
-          terraform-working-directory: terraform/kubernetes-cluster
-          terraform-cache-key: kubernetes-cluster
-
-      - name: Debug EKS Cache After Init
-        run: |
-          ls -al $HOME/.terraform.d/plugin-cache-kubernetes-cluster
+          tf-directory: terraform/kubernetes-cluster
 
       - name: Check if EKS cluster exists
         working-directory: terraform/kubernetes-cluster
         run: |
           terraform init
           terraform apply -auto-approve
-
-      - name: Debug EKS Cache After Init and run
-        run: |
-          ls -al $HOME/.terraform.d/plugin-cache-kubernetes-cluster
+r
 
       - name: Use FastAPI deployment Terraform cache
         uses: ./.github/actions/terraform_lock_caching
         with:
-          terraform-working-directory: terraform/fastapi-deployment
-          terraform-cache-key: fastapi-deployment
+          tf-directory: terraform/fastapi-deployment
 
       - name: Deploy new version to Amazon EKS cluster
         env:
