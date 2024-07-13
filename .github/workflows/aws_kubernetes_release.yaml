@@ -12,7 +12,7 @@ jobs:
     env:
       IMAGE_TAG: prod-${{ github.sha }}
     outputs:
-      ecr-image-tag: ${{ steps.set-image-tag.outputs.ECR_IMAGE_TAG }}
+      ecr-image-tag: ${{ steps.output-image-tag.outputs.ECR_IMAGE_TAG }}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
