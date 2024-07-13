@@ -100,7 +100,6 @@ jobs:
         run: |
           terraform init
           terraform apply -auto-approve
-r
 
       - name: Use FastAPI deployment Terraform cache
         uses: ./.github/actions/terraform_lock_caching
