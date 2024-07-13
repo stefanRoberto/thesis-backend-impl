@@ -13,8 +13,7 @@ resource "kubernetes_manifest" "issuer_le_http_thesis_api" {
     spec = {
       acme = {
         email  = local.acme_email
-        server = "https://acme-staging-v02.api.letsencrypt.org/directory"
-#         server = "https://acme-v02.api.letsencrypt.org/directory"
+        server = var.ACME_SERVER
 
         privateKeySecretRef = {
           name = "thesis-api-issuer-account-key"
