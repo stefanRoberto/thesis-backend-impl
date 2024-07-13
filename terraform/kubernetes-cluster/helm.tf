@@ -35,6 +35,8 @@ resource "helm_release" "mysql" {
     value = "10Gi"
   }
 
+  timeout = 150
+
   depends_on = [module.eks, aws_iam_policy.ebs]
 }
 

@@ -1,7 +1,7 @@
 import datetime
+from unittest.mock import MagicMock, ANY
 
 import pytest
-from unittest.mock import MagicMock, ANY
 
 from app import models, schemas
 from app.services import artists
@@ -137,6 +137,7 @@ def test_update_artist(session, db_artist, find_artist_mock, jsonable_encoder_mo
 
 def test_delete_artist(session, db_artist, find_artist_mock, jsonable_encoder_mock):
     artists.find_artist = find_artist_mock
+    session.delete.return_value = None
     session.commit.return_value = None
     artists.jsonable_encoder = jsonable_encoder_mock
 

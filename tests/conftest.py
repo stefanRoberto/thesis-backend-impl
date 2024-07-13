@@ -5,13 +5,10 @@ import pytest
 from sqlalchemy.orm import Session
 from starlette.testclient import TestClient
 
-from app import database, schemas
+from app import schemas
 from app.main import app
 
 client = TestClient(app)
-
-database.drop_database()
-database.create_database()
 
 
 @pytest.fixture
@@ -19,7 +16,7 @@ def session():
     return MagicMock(spec=Session)
 
 
-@pytest.fixture
+@pytest.fixture(scope="module")
 def artist_create_schema():
     return schemas.ArtistCreate(name="Test Artist",
                                 country="UK",
@@ -39,3 +36,9 @@ def album_create_schema():
     return schemas.AlbumCreate(title="Test Album",
                                release_date=datetime.date.today(),
                                artist_id=1)
+
+
+@pytest.fixture
+def album_update_schema():
+    return schemas.AlbumUpdate(title="Updated Test Album",
+                               release_date=datetime.date(2000, 1, 1))
