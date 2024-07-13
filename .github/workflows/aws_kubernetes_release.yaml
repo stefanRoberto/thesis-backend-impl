@@ -8,8 +8,10 @@ jobs:
   push-image-to-ecr:
     runs-on: ubuntu-latest
     environment: Production
+    env:
+      IMAGE_TAG: prod-${{ github.sha }}
     outputs:
-      ecr-image-tag: ${{ steps.push-image.outputs.ECR_IMAGE_TAG }}
+      ecr-image-tag: $IMAGE_TAG
     steps:
     - name: Checkout code
       uses: actions/checkout@v3
@@ -42,11 +44,9 @@ jobs:
         docker buildx create --name builder-instance --use
 
     - name: Build, tag, and push docker image to Amazon ECR
-      id: push-image
       env:
         REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         REPOSITORY: ${{ env.ECR_REPOSITORY_NAME }}
-        IMAGE_TAG: "prod-${{ github.sha }}"
       uses: docker/build-push-action@v5
       with:
         context: .
@@ -56,8 +56,6 @@ jobs:
         builder: builder-instance
         cache-from: type=registry,ref=$REGISTRY/$REPOSITORY:cache
         cache-to: type=registry,mode=max,image-manifest=true,oci-mediatypes=true,ref=$REGISTRY/$REPOSITORY:cache
-      run: |
-        echo ECR_IMAGE_TAG=$IMAGE_TAG >> $GITHUB_OUTPUT
 
   deploy:
     runs-on: ubuntu-latest
