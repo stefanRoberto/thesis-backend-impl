@@ -15,7 +15,7 @@ jobs:
       ecr-image-tag: ${{ steps.output-image-tag.outputs.ECR_IMAGE_TAG }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials and setup Terraform
         uses: ./.github/actions/aws_terraform_setup
@@ -29,11 +29,6 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
         with:
           mask-password: 'true'
-
-      - name: Use ECR Terraform cache
-        uses: ./.github/actions/terraform_lock_caching
-        with:
-          tf-directory: terraform/container-registry
 
       - name: Check if ECR repository exists
         working-directory: terraform/container-registry
@@ -81,7 +76,7 @@ jobs:
       TF_VAR_DB_NAME: ${{ vars.DB_NAME }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials and setup Terraform
         uses: ./.github/actions/aws_terraform_setup
@@ -90,21 +85,11 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Use EKS Terraform cache
-        uses: ./.github/actions/terraform_lock_caching
-        with:
-          tf-directory: terraform/kubernetes-cluster
-
       - name: Check if EKS cluster exists
         working-directory: terraform/kubernetes-cluster
         run: |
           terraform init
           terraform apply -auto-approve
-
-      - name: Use FastAPI deployment Terraform cache
-        uses: ./.github/actions/terraform_lock_caching
-        with:
-          tf-directory: terraform/fastapi-deployment
 
       - name: Deploy new version to Amazon EKS cluster
         env:
