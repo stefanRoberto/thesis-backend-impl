@@ -1,0 +1,22 @@
+name: 'Switch Terraform cache per configuration used'
+description: 'This is a composite action that makes referencing Terraform caches easier.'
+
+inputs:
+  terraform-working-directory:
+    description: 'The directory where Terraform commands are run'
+    required: true
+  terraform-cache-key:
+    description: 'Cache key used to identify corresponding lock file'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Cache Terraform
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.terraform.d/plugin-cache
+        key: terraform-${{ runner.os }}-${{ inputs.terraform-cache-key }}-${{ hashFiles('${{ inputs.terraform-working-directory }}/.terraform.lock.hcl') }}
+        restore-keys: |
+          terraform-${{ runner.os }}-${{ inputs.terraform-cache-key }}-

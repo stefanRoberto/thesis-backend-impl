@@ -1,15 +1,17 @@
 name: 'Configure AWS credentials and setup Terraform'
 description: 'This is a composite action that configures AWS credentials and sets up Terraform.'
+
 inputs:
-    aws-access-key-id:
-        description: 'AWS Access Key ID'
-        required: true
-    aws-secret-access-key:
-        description: 'AWS Secret Access Key'
-        required: true
-    aws-region:
-        description: 'AWS Region'
-        required: true
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
+
 runs:
   using: 'composite'
   steps:
@@ -31,12 +33,3 @@ runs:
       run: |
         echo "TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache" >>"$GITHUB_ENV"
         mkdir --parents "$HOME/.terraform.d/plugin-cache"
-
-    - name: Cache Terraform
-      uses: actions/cache@v4
-      with:
-        path: |
-          ~/.terraform.d/plugin-cache
-        key: terraform-${{ runner.os }}-${{ hashFiles('**/.terraform.lock.hcl') }}
-        restore-keys: |
-          terraform-${{ runner.os }}-
