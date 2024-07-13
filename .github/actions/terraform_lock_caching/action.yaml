@@ -1,0 +1,28 @@
+name: 'Create and use Terraform cache'
+description: 'This is a composite action that makes the creation and use of Terraform caches easier.'
+
+inputs:
+  terraform-cache-key:
+    description: 'Cache key used to identify corresponding lock file'
+    required: true
+  terraform-working-directory:
+    description: 'The directory where Terraform commands are run'
+    required: true
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Configure Terraform plugin cache
+      shell: bash
+      run: |
+        echo "TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache-${{ inputs.terraform-cache-key }}" >>"$GITHUB_ENV"
+        mkdir --parents "$HOME/.terraform.d/plugin-cache-${{ inputs.terraform-cache-key }}"
+
+    - name: Cache Terraform
+      uses: actions/cache@v4
+      with:
+        path: |
+          ~/.terraform.d/plugin-cache-${{ inputs.terraform-cache-key }}
+        key: terraform-${{ inputs.terraform-cache-key }}-${{ runner.os }}-${{ hashFiles(inputs.terraform-working-directory + '/.terraform.lock.hcl') }}
+        restore-keys: |
+          terraform-${{ inputs.terraform-cache-key }}-${{ runner.os }}-

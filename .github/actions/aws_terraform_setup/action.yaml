@@ -27,9 +27,3 @@ runs:
       with:
         terraform_version: 1.8.4
         terraform_wrapper: false
-
-    - name: Configure Terraform plugin cache
-      shell: bash
-      run: |
-        echo "TF_PLUGIN_CACHE_DIR=$HOME/.terraform.d/plugin-cache" >>"$GITHUB_ENV"
-        mkdir --parents "$HOME/.terraform.d/plugin-cache"

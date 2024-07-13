@@ -31,7 +31,7 @@ jobs:
           mask-password: 'true'
 
       - name: Use ECR Terraform cache
-        uses: ./.github/actions/terraform_cache_switch
+        uses: ./.github/actions/terraform_lock_caching
         with:
           terraform-working-directory: terraform/container-registry
           terraform-cache-key: container-registry
@@ -92,7 +92,7 @@ jobs:
           aws-region: ${{ vars.AWS_REGION }}
 
       - name: Use EKS Terraform cache
-        uses: ./.github/actions/terraform_cache_switch
+        uses: ./.github/actions/terraform_lock_caching
         with:
           terraform-working-directory: terraform/kubernetes-cluster
           terraform-cache-key: kubernetes-cluster
@@ -104,7 +104,7 @@ jobs:
           terraform apply -auto-approve
 
       - name: Use FastAPI deployment Terraform cache
-        uses: ./.github/actions/terraform_cache_switch
+        uses: ./.github/actions/terraform_lock_caching
         with:
           terraform-working-directory: terraform/fastapi-deployment
           terraform-cache-key: fastapi-deployment
