@@ -1,10 +1,12 @@
 name: 'Setup Python and Install Dependencies'
 description: 'This is a composite action that will handle setting up and installing python dependencies.'
+
 inputs:
   extra-dependencies:
     description: 'Additional dependencies to install (optional)'
     required: false
     default: ''
+
 runs:
   using: 'composite'
   steps:
