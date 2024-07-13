@@ -23,6 +23,6 @@ runs:
       with:
         path: |
           ~/.terraform.d/plugin-cache-${{ inputs.terraform-cache-key }}
-        key: terraform-${{ inputs.terraform-cache-key }}-${{ runner.os }}-${{ hashFiles(inputs.terraform-working-directory + '/.terraform.lock.hcl') }}
+        key: terraform-${{ inputs.terraform-cache-key }}-${{ runner.os }}-${{ hashFiles(format('{0}/.terraform.lock.hcl', inputs.terraform-working-directory)) }}
         restore-keys: |
           terraform-${{ inputs.terraform-cache-key }}-${{ runner.os }}-
