@@ -14,7 +14,13 @@ runs:
       uses: actions/setup-python@v3
       with:
         python-version: "3.11"
-        cache: "pip"
+
+    - name: Cache Python dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ inputs.extra-dependencies }}
+
     - name: Install dependencies
       shell: bash
       run: |
