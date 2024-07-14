@@ -29,10 +29,11 @@ runs:
     - name: Check cache hit and branch name
       shell: bash
       id: check-cache-hit
+      continue-on-error: true
       run: |
-        if [[ "${{ steps.cache-python-dependencies.outputs.cache-hit }}" == 'true' && "${{ github.ref_name }}" == 'development' ]]; then
+        if [[ "${{ steps.cache-python-dependencies.outputs.cache-hit }}" == "true" && "${{ github.ref_name }}" == "development" ]]; then
           echo "Cache hit on development branch. Exiting workflow."
-          exit 0
+          exit 1
         fi
 
     - name: Install dependencies
