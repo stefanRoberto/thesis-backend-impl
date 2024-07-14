@@ -1,0 +1,25 @@
+name: Development cache creation workflow
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  create-caches:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Cache linting dependencies
+        uses: ./.github/actions/python_setup
+        with:
+          extra-dependencies: flake8==7.1.0
+          cache-tag: lint
+
+      - name: Cache testing dependencies
+        uses: ./.github/actions/python_setup
+        with:
+          extra-dependencies: pytest==8.2.2 pytest-cov==5.0.0
+          cache-tag: test

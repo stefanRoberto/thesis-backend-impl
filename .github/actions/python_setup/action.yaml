@@ -19,12 +19,15 @@ runs:
         python-version: "3.11"
 
     - name: Cache Python dependencies
+      id: cache-python-dependencies
       uses: actions/cache@v4
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ inputs.cache-tag }}
+        key: ${{ runner.os }}-pip-development-${{ inputs.cache-tag }}-${{ hashFiles('**/requirements.txt') }}
+        restore-keys: ${{ runner.os }}-pip-development-${{ inputs.cache-tag }}-
 
     - name: Install dependencies
+      if: github.ref_name != 'development' || (github.ref_name != 'development' && steps.cache-python-dependencies.outputs.cache-hit != 'true')
       shell: bash
       run: |
         python -m pip install --upgrade pip
