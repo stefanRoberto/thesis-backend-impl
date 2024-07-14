@@ -12,10 +12,10 @@ jobs:
     env:
       IMAGE_TAG: prod-${{ github.sha }}
     outputs:
-      ecr-image-tag: ${{ steps.set-image-tag.outputs.ECR_IMAGE_TAG }}
+      ecr-image-tag: ${{ steps.output-image-tag.outputs.ECR_IMAGE_TAG }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials and setup Terraform
         uses: ./.github/actions/aws_terraform_setup
@@ -26,7 +26,7 @@ jobs:
 
       - name: Login to Amazon ECR
         id: login-ecr
-        uses: aws-actions/amazon-ecr-login@v1
+        uses: aws-actions/amazon-ecr-login@v2
         with:
           mask-password: 'true'
 
@@ -76,7 +76,7 @@ jobs:
       TF_VAR_DB_NAME: ${{ vars.DB_NAME }}
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Configure AWS credentials and setup Terraform
         uses: ./.github/actions/aws_terraform_setup

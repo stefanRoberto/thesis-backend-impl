@@ -1,15 +1,17 @@
 name: 'Configure AWS credentials and setup Terraform'
 description: 'This is a composite action that configures AWS credentials and sets up Terraform.'
+
 inputs:
-    aws-access-key-id:
-        description: 'AWS Access Key ID'
-        required: true
-    aws-secret-access-key:
-        description: 'AWS Secret Access Key'
-        required: true
-    aws-region:
-        description: 'AWS Region'
-        required: true
+  aws-access-key-id:
+    description: 'AWS Access Key ID'
+    required: true
+  aws-secret-access-key:
+    description: 'AWS Secret Access Key'
+    required: true
+  aws-region:
+    description: 'AWS Region'
+    required: true
+
 runs:
   using: 'composite'
   steps:
