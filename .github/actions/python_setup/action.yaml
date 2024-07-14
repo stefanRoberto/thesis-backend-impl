@@ -37,7 +37,7 @@ runs:
 #        fi
 
     - name: Install dependencies
-#      if: ${{ steps.check-cache-hit.outcome != 'success' }}
+      if: steps.cache-python-dependencies.outcome.cache-hit != 'true' || steps.cache-python-dependencies.outcome.cache-hit == 'true' && github.ref_name != 'development'
       shell: bash
       run: |
         python -m pip install --upgrade pip
