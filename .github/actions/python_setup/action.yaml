@@ -6,6 +6,9 @@ inputs:
     description: 'Additional dependencies to install (optional)'
     required: false
     default: ''
+  cache-tag:
+    description: 'Tag used to identify corresponding cache'
+    required: true
 
 runs:
   using: 'composite'
@@ -19,7 +22,7 @@ runs:
       uses: actions/cache@v4
       with:
         path: ~/.cache/pip
-        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ inputs.extra-dependencies }}
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ inputs.cache-tag }}
 
     - name: Install dependencies
       shell: bash
