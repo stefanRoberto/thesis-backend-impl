@@ -16,6 +16,7 @@ jobs:
         uses: ./.github/actions/python_setup
         with:
           extra-dependencies: flake8==7.1.0
+          cache-tag: lint
 
       - name: Lint with flake8
         run: |
@@ -38,12 +39,13 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup python 3.11 and install dependencies
         uses: ./.github/actions/python_setup
         with:
           extra-dependencies: pytest==8.2.2 pytest-cov==5.0.0
+          cache-tag: test
 
       - name: Create .env file
         run: |
