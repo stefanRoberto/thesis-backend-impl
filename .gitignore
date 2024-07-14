@@ -193,6 +193,3 @@ override.tf.json
 # Ignore CLI configuration files
 .terraformrc
 terraform.rc
-
-# Ignore presentation related folders and files
-testing-add-routes/
