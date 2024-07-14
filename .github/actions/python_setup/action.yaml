@@ -6,15 +6,24 @@ inputs:
     description: 'Additional dependencies to install (optional)'
     required: false
     default: ''
+  cache-tag:
+    description: 'Tag used to identify corresponding cache'
+    required: true
 
 runs:
   using: 'composite'
   steps:
     - name: Setup Python 3.11
-      uses: actions/setup-python@v3
+      uses: actions/setup-python@v5
       with:
         python-version: "3.11"
-        cache: "pip"
+
+    - name: Cache Python dependencies
+      uses: actions/cache@v4
+      with:
+        path: ~/.cache/pip
+        key: ${{ runner.os }}-pip-${{ hashFiles('**/requirements.txt') }}-${{ inputs.cache-tag }}
+
     - name: Install dependencies
       shell: bash
       run: |
